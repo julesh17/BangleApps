@@ -127,7 +127,7 @@ function startRecord(force) {
       accel.y,
       accel.z,
       comp.x,
-      comp.y
+      comp.y,
       comp.z].map(n=>Math.round(n*100000000)/100000000).join(","));
 	
 
