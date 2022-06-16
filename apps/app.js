@@ -1,10 +1,6 @@
 var fileNumber = 0;
 var MAXLOGS = 9;
 
-var pret = 0;
-
-
-Bangle.setCompassPower(1);
 function getFileName(n) {
   return "accellog."+n+".csv";
 }
@@ -112,49 +108,32 @@ function startRecord(force) {
 
   // now start writing
   var f = require("Storage").open(getFileName(fileNumber), "w");
-  f.write("Time (ms),X,Y,Z\n");
+  f.write("Time (ms),AX,AY,AZ,MX,MY,MZ\n");
   var start = getTime();
   var sampleCount = 0;
 
   function accelHandler(accel) {
-    pret = 0;
+	Bangle.setCompassPower(1);
+    var comp = Bangle.getCompass();
     var t = getTime()-start;
     f.write([
       t*1000,
       accel.x,
       accel.y,
-      accel.z].map(n=>Math.round(n*100000000)/100000000).join(","));
-	Bangle.setCompassPower(1)
-pret = 1;
-
-  }
-
-// moi
-
-function magHandler(mag) {
-
-if (pret==1){
-
-    f.write([
-      mag.x,
-      mag.y,
-      mag.z].map(n=>Math.round(n*100000000)/100000000).join(",")+"\n");
+      accel.z,
+      comp.x,
+      comp.y,
+      comp.z].map(n=>Math.round(n*100000000)/100000000).join(",")+"\n");
 
     sampleCount++;
     layout.samples.label = sampleCount;
     layout.time.label = Math.round(t)+"s";
     layout.render(layout.samples);
     layout.render(layout.time);
-	} //pour le if 	
   }
-
-
 
   Bangle.setPollInterval(80); // 12.5 Hz - the default
   Bangle.on('accel', accelHandler);
-  Bangle.setCompassPower(1)
-  Bangle.on('mag', magHandler);
-
 }
 
 
