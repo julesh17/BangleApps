@@ -125,10 +125,7 @@ function startRecord(force) {
       t*1000,
       accel.x,
       accel.y,
-      accel.z,
-      comp.x,
-      comp.y,
-      comp.z].map(n=>Math.round(n*100000000)/100000000).join(","));
+      accel.z].map(n=>Math.round(n*100000000)/100000000).join(","));
 	
 
     sampleCount++;
