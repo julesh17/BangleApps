@@ -1,10 +1,8 @@
 var fileNumber = 0;
 var MAXLOGS = 9;
 
-var comp = Bangle.getCompass()
-
-
 Bangle.setCompassPower(1);
+
 function getFileName(n) {
   return "accellog."+n+".csv";
 }
@@ -117,31 +115,26 @@ function startRecord(force) {
   var sampleCount = 0;
 
   function accelHandler(accel) {
-
-    comp = Bangle.getCompass()
-
+    var comp = Bangle.getCompass();
     var t = getTime()-start;
     f.write([
       t*1000,
       accel.x,
       accel.y,
-      accel.z].map(n=>Math.round(n*100000000)/100000000).join(","));
-	
+      accel.z,
+      comp.x,
+      comp.y,
+      comp.z].map(n=>Math.round(n*100000000)/100000000).join(",")+"\n");
 
     sampleCount++;
     layout.samples.label = sampleCount;
     layout.time.label = Math.round(t)+"s";
     layout.render(layout.samples);
     layout.render(layout.time);
-
-
   }
-
-
 
   Bangle.setPollInterval(80); // 12.5 Hz - the default
   Bangle.on('accel', accelHandler);
-
 }
 
 
